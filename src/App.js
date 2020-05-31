@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import './App.css';
+import axios from 'axios';
 
 const api = {
     key: "c76ba862a6ed848c70b7f9b27f163a57",
@@ -47,10 +48,9 @@ function App() {
 
     const search = (e) => {
         if (e.key === "Enter") {
-            fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
-                .then(res => res.json())
+            axios.get(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
                 .then(result => {
-                    setWeather(result);
+                    setWeather(result.data);
                     setQuery('');
                     console.log(result);
                 });
