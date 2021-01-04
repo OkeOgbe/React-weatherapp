@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
 import axios from 'axios';
 
@@ -7,7 +7,27 @@ const api = {
     base: "https://api.openweathermap.org/data/2.5/"
 }
 
+const registerSw = () =>{
+    if('serviceWorker' in navigator){
+        window.addEventListener("load" , () =>{
+            navigator.serviceWorker.register('/serviceWorker.js')
+                .then((res) => {
+                    console.log('serviceWoker registered', res)
+                })
+                .catch(err => {
+                    console.log('serviceworker not registered', err)
+                })
+        });
+    }
+}
+
+
 function App() {
+
+    useEffect(() => {
+        registerSw();
+    }, [])
+
     const dateBuilder = (d) => {
         let months = [
             'January',
@@ -48,9 +68,10 @@ function App() {
 
     const search = (e) => {
         if (e.key === "Enter") {
-            axios.get(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+            (`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+
                 .then(result => {
-                    setWeather(result.data);
+                    setWeather(result);
                     setQuery('');
                     console.log(result);
                 });
